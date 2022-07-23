@@ -1,4 +1,4 @@
-local S = df_farming.S
+local S = minetest.get_translator(minetest.get_current_modname())
 
 local displace_x = 0.125
 local displace_z = 0.125

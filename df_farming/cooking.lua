@@ -1,4 +1,4 @@
-local S = df_farming.S
+local S = minetest.get_translator(minetest.get_current_modname())
 
 local register_cooking_recipes = function(def)
 	local prefix = def.prefix
