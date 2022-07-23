@@ -41,6 +41,13 @@ local get_biome = function(heat, humidity)
 	end
 end
 
+table.insert(df_caverns.get_biome_at_pos_list, function(pos, heat, humidity)
+	if pos.y < df_caverns.config.level1_min or pos.y > df_caverns.config.ymax then
+		return nil
+	end
+	return get_biome(heat, humidity)	
+end)
+
 local tower_cap_cavern_floor = function(abs_cracks, vert_rand, vi, area, data, data_param2)
 	local ystride = area.ystride
 	if abs_cracks < 0.1 then

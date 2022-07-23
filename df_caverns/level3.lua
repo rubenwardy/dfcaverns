@@ -36,6 +36,20 @@ local get_biome = function(heat, humidity)
 	end
 end
 
+table.insert(df_caverns.get_biome_at_pos_list, function(pos, heat, humidity)
+	if pos.y < df_caverns.config.level3_min or pos.y >= df_caverns.config.level2_min then
+		return nil
+	end
+	local biome = get_biome(heat, humidity)
+	if biome == "bloodnether" then
+		if subterrane.get_cavern_value("cavern layer 3", pos) < 0 then
+			return "nethercap"
+		end
+		return "bloodthorn"
+	end
+	return biome
+end)
+
 local black_cap_shrublist
 local nether_cap_shrublist
 local blood_thorn_shrublist

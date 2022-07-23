@@ -24,6 +24,16 @@ local perlin_wave_primordial = {
 
 local giant_mycelium_timer_spread = tonumber(minetest.settings:get("dcaverns_giant_mycelium_timer_spread")) or 10
 
+table.insert(df_caverns.get_biome_at_pos_list, function(pos, heat, humidity)
+	if pos.y < df_caverns.config.primordial_min or pos.y > df_caverns.config.primordial_max then
+		return nil
+	end
+	if subterrane.get_cavern_value("primordial", pos) < 0 then
+		return "primordial jungle"
+	end
+	return "primordial fungus"
+end)
+
 -----------------------------------------------------------------------------------------
 -- Fungal biome
 
@@ -411,7 +421,7 @@ minetest.register_ore({
 	random_factor = 0,
 })
 
--- Rather than make plants farmable, have them randomly respawn in jungle soil. You can only get them down there.
+-- Rather than make plants farmable, have them randomly respawn in jungle soil. You can only get them down there by foraging, not farming.
 minetest.register_abm({
 	label = "Primordial plant growth",
 	nodenames = {"df_primordial_items:dirt_with_jungle_grass"},

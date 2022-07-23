@@ -18,11 +18,11 @@ for node_name, node_def in pairs(minetest.registered_nodes) do
 	end
 end
 
-local mushroom_shrublist
+local towergoblin_shrublist
 local fungispore_shrublist
 
 if minetest.get_modpath("df_farming") then
-	mushroom_shrublist = {
+	towergoblin_shrublist = {
 		df_farming.spawn_plump_helmet_vm,
 		df_farming.spawn_plump_helmet_vm,
 		df_farming.spawn_dimple_cup_vm,
@@ -94,7 +94,22 @@ local hot_zone_boundary = 70
 local middle_zone_boundary = 50
 local cool_zone_boundary = 30
 
-local mushroom_cavern_floor = function(abs_cracks, vert_rand, vi, area, data, data_param2)
+table.insert(df_caverns.get_biome_at_pos_list, function(pos, heat, humidity)
+	if pos.y < df_caverns.config.sunless_sea_min or pos.y >= df_caverns.config.level3_min then
+		return nil
+	end
+	if heat > hot_zone_boundary then
+		return "barren" -- hot zone
+	elseif heat > middle_zone_boundary then
+		return "fungispore"
+	elseif heat > cool_zone_boundary then
+		return "towergoblin"
+	else
+		return "barren" -- cool zone
+	end
+end)
+
+local towergoblin_cavern_floor = function(abs_cracks, vert_rand, vi, area, data, data_param2)
 	local ystride = area.ystride
 	if abs_cracks < 0.1 then
 		df_caverns.stalagmites(abs_cracks, vert_rand, vi, area, data, data_param2, true)
@@ -105,7 +120,7 @@ local mushroom_cavern_floor = function(abs_cracks, vert_rand, vi, area, data, da
 			data[vi] = c_dirt_moss
 		end
 		if math.random() < 0.1 then
-			df_caverns.place_shrub(vi+ystride, area, data, data_param2, mushroom_shrublist)
+			df_caverns.place_shrub(vi+ystride, area, data, data_param2, towergoblin_shrublist)
 		elseif abs_cracks > 0.25 then
 			if math.random() < 0.01 then
 				df_trees.spawn_tower_cap_vm(vi+ystride, area, data)
@@ -269,7 +284,7 @@ local decorate_sunless_sea = function(minp, maxp, seed, vm, node_arrays, area, d
 				elseif heat > middle_zone_boundary then
 					fungispore_cavern_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
 				elseif heat > cool_zone_boundary then
-					mushroom_cavern_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
+					towergoblin_cavern_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
 				else
 					cool_zone_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
 				end
