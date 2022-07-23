@@ -47,7 +47,12 @@ local plump_helmet_on_place =  function(itemstack, placer, pointed_thing, plantn
 
 	-- add the node and remove 1 item from the itemstack
 	minetest.add_node(pt.above, {name = plantname, param2 = math.random(0,3)})
-	df_farming.plant_timer(pt.above, plantname)
+	
+	local growth_permitted_function = df_farming.growth_permitted["df_farming:plump_helmet_spawn"] -- use the same permitted function for all plump helmets
+	if not growth_permitted_function or growth_permitted_function(pt.above) then
+		df_farming.plant_timer(pt.above, plantname)
+	end
+
 	if not minetest.settings:get_bool("creative_mode", false) then
 		itemstack:take_item()
 	end
