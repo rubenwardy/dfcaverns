@@ -35,6 +35,19 @@ df_caverns.get_biome = function(pos)
 	end
 end
 
+-- for testing
+--local debug_timer = 0
+--minetest.register_globalstep(function(dtime)
+--	debug_timer = debug_timer + dtime
+--	if debug_timer > 5 then
+--		local singleplayer = minetest.get_player_by_name("singleplayer")
+--		if singleplayer then
+--			minetest.debug(df_caverns.get_biome(singleplayer:get_pos()))
+--		end
+--		debug_timer = debug_timer - 5
+--	end
+--end)
+
 -- prevent mapgen from using these nodes as a base for stalactites or stalagmites
 local dont_build_speleothems_on = {}
 for _, content_id in pairs(df_mapitems.wet_stalagmite_ids) do

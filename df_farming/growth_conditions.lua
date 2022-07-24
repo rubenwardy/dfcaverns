@@ -1,4 +1,6 @@
 df_farming.growth_permitted = {}
+-- The defaults here are very boring on account of how the farming code already
+-- checks soil conditions. Other mods can insert biome checks and whatnot here.
 
 df_farming.growth_permitted["df_farming:cave_wheat_seed"] = function(pos)
 	return true
