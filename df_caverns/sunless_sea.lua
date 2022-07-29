@@ -11,6 +11,11 @@ local c_obsidian = df_caverns.node_id.obsidian
 
 local chasms_path = minetest.get_modpath("chasms")
 
+local log_location
+if mapgen_helper.log_location_enabled then
+	log_location = mapgen_helper.log_first_location
+end
+
 local c_coral_table = {}
 for node_name, node_def in pairs(minetest.registered_nodes) do
 	if minetest.get_item_group(node_name, "dfcaverns_cave_coral") > 0 then
@@ -231,6 +236,7 @@ local decorate_sunless_sea = function(minp, maxp, seed, vm, node_arrays, area, d
 					end
 				elseif y > floor_height and y < ceiling_height and data[vi] ~= c_wet_flowstone then
 					data[vi] = c_air
+					if log_location then log_location("sunless_sea_river", vector.new(x,y,z)) end
 				elseif y == ceiling_height and not mapgen_helper.buildable_to(data[vi]) then
 					df_caverns.glow_worm_cavern_ceiling(math.abs(cracks),
 						mapgen_helper.xz_consistent_randomi(area, vi), vi, area, data, data_param2)
@@ -281,12 +287,16 @@ local decorate_sunless_sea = function(minp, maxp, seed, vm, node_arrays, area, d
 			if y >= sea_level  then
 				if heat > hot_zone_boundary then
 					hot_zone_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
+					if log_location then log_location("sunless_sea_hot", area:position(vi)) end
 				elseif heat > middle_zone_boundary then
 					fungispore_cavern_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
+					if log_location then log_location("sunless_sea_fungispore", area:position(vi)) end
 				elseif heat > cool_zone_boundary then
 					towergoblin_cavern_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
+					if log_location then log_location("sunless_sea_towergoblin", area:position(vi)) end
 				else
 					cool_zone_floor(abs_cracks, vert_rand, vi, area, data, data_param2)
+					if log_location then log_location("sunless_sea_cool", area:position(vi)) end
 				end
 			elseif y >= sea_level - 30 then
 				if math.random() < 0.005 then
@@ -300,6 +310,7 @@ local decorate_sunless_sea = function(minp, maxp, seed, vm, node_arrays, area, d
 					local iterations = math.random(1, 6)
 					df_mapitems.spawn_coral_pile(area, data, vi, iterations)
 					df_mapitems.spawn_castle_coral(area, data, vi+area.ystride, iterations)
+					if log_location then log_location("sunless_sea_castle_coral", area:position(vi)) end
 				end
 			end
 		end
@@ -383,6 +394,7 @@ local decorate_sunless_sea = function(minp, maxp, seed, vm, node_arrays, area, d
 	for _, vi in ipairs(node_arrays.warren_floor_nodes) do
 		if area:get_y(vi) >= sea_level and not mapgen_helper.buildable_to(data[vi]) then
 			df_caverns.tunnel_floor(minp, maxp, area, vi, nvals_cracks, data, data_param2, true)
+			if log_location then log_location("sunless_sea_warren", area:position(vi)) end
 		end
 	end
 

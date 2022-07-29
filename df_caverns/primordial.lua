@@ -4,6 +4,11 @@ end
 
 local c_air = df_caverns.node_id.air
 
+local log_location
+if mapgen_helper.log_location_enabled then
+	log_location = mapgen_helper.log_first_location
+end
+
 local perlin_cave_primordial = {
 	offset = 0,
 	scale = 1,
@@ -160,6 +165,16 @@ local jungle_cavern_floor = function(abs_cracks, humidity, vi, area, data, data_
 	local ystride = area.ystride
 	local humidityfactor = humidity/100
 	
+	if log_location then
+		local pos = area:position(vi)
+		log_location("primordial_jungle", pos)
+		if humidityfactor < 0.25 then
+			log_location("primordial_jungle_low_humidity", pos)
+		elseif humidityfactor > 0.75 then
+			log_location("primordial_jungle_high_humidity", pos)
+		end
+	end
+
 	data[vi] = c_jungle_dirt
 
 	local rand = math.random()
@@ -278,6 +293,7 @@ local decorate_primordial = function(minp, maxp, seed, vm, node_arrays, area, da
 			jungle_cavern_floor(abs_cracks, humidity, vi, area, data, data_param2)
 		else
 			mushroom_cavern_floor(abs_cracks, humidity, vi, area, data, data_param2)
+			if log_location then log_location("primordial_mushrooms", area:position(vi)) end
 		end
 	end
 	
@@ -337,8 +353,10 @@ local decorate_primordial = function(minp, maxp, seed, vm, node_arrays, area, da
 		
 		if jungle then
 			jungle_warren_floor(abs_cracks, vi, area, data, data_param2)
+			if log_location then log_location("primordial_jungle_warren", area:position(vi)) end
 		else
 			mushroom_warren_floor(abs_cracks, vi, area, data, data_param2)
+			if log_location then log_location("primordial_mushroom_warren", area:position(vi)) end
 		end
 	end
 
