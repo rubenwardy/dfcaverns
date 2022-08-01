@@ -90,6 +90,10 @@ minetest.register_node("df_farming:plump_helmet_spawn", {
 	on_timer = function(pos, elapsed)
 		df_farming.grow_underground_plant(pos, "df_farming:plump_helmet_spawn", elapsed)
 	end,
+	
+	on_destruct = function(pos)
+		minetest.get_node_timer(pos):stop()
+	end,
 })
 
 minetest.register_node("df_farming:plump_helmet_1", {

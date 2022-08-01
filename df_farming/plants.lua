@@ -171,6 +171,10 @@ df_farming.register_seed = function(name, description, image, stage_one, grow_ti
 		on_timer = function(pos, elapsed)
 			df_farming.grow_underground_plant(pos, "df_farming:"..name, elapsed)
 		end,
+		
+		on_destruct = function(pos)
+			minetest.get_node_timer(pos):stop()
+		end,
 	}
 	
 	minetest.register_node("df_farming:"..name, def)
