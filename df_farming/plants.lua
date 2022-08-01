@@ -134,6 +134,8 @@ local place_seed = function(itemstack, placer, pointed_thing, plantname)
 	local growth_permitted_function = df_farming.growth_permitted[plantname]
 	if not growth_permitted_function or growth_permitted_function(pt.above) then
 		df_farming.plant_timer(pt.above, plantname)
+	else
+		minetest.get_node_timer(pt.above):stop() -- make sure no old timers are running on this node
 	end
 	if not minetest.settings:get_bool("creative_mode", false) then
 		itemstack:take_item()
